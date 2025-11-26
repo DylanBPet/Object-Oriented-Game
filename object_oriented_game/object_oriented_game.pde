@@ -37,19 +37,6 @@ void draw(){
    }
   }
   
- /*
-  for(int i = 0; i<ball.size(); i++){
-  Ball ball = ball.get(i);
-  ball[i].display(); //display the balls
-  ball[i].fall(); //make the balls fall
-  ball[i].bounce(); //makes the ball bounce when it reaches bottom of screen
-  
-  if (ball[i].spawnNewBall(ball[i])){ //when the ball reaches the bottom for the first time, spawn another ball
-  
-  }
-  }
-  */
-  
 }
 
 
