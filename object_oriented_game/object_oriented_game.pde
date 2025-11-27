@@ -4,59 +4,112 @@ boolean screenIsBlack = false; //is the screen black or not
 boolean holdSpace = false;  //this is for if the player holds space, it does not flash between white and black background
 
 boolean holdA = false;     //is the player holding the A key
+float xMove = 22; //position of Player on x axis
 boolean holdD = false;      //is the player holding the D key
 
 ArrayList<Ball> balls;
-//Ball[] ball = new Ball[ballNumber];
 
-void setup(){
+Player player;
+
+void setup() {
   size (400, 400);
-  
+
   //initialize arraylist
- balls = new ArrayList<Ball>();
-  balls.add(new Ball());
+  balls = new ArrayList<Ball>();
+  balls.add(new Ball(random(0, 400), -17));
 }
 
 
-void draw(){
-  if(screenIsBlack == true){
-   background(0); 
+void draw() {
+
+  player = new Player();
+
+  if (screenIsBlack == true) {
+    background(0);
   } else {
-    background(255); 
+    background(255);
   }
-  
- 
-  
-  for (int i = balls.size()-1; i >=0 ; i--){
+
+  //////Bottom Bar////////////////
+  if (screenIsBlack == true) {
+    fill(255);
+  } else if (screenIsBlack == false) {
+    fill(0);
+  }
+
+  rect(0, 335, 400, 400);
+
+  if (screenIsBlack == true) {
+    fill(0);
+  } else if (screenIsBlack == false) {
+    fill(255);
+  }
+  textSize(25);
+  text("Press Space", 135, 370);
+
+
+
+  //////////////////////////////Ball/////////////////////////////////
+ for (int i = balls.size()-1; i >=0; i--) {
    Ball ball = balls.get(i);
-   ball.display();
-   ball.fall();
-   ball.bounce();
-   if(ball.spawnNewBall()){
-    balls.add(new Ball()); 
-   }
+    ball.display();
+    ball.fall();
+    ball.bounce();
+    if (ball.spawnNewBall()) {
+     balls.add(new Ball(random(0, 400), -17));
+    }
   }
-  
-}
-
-
-void keyPressed(){
- 
-      //when the space bar is pressed and you are not holding it, make screen the opposite colour of what it is
-  if(key == ' ' && holdSpace == false){
-    holdSpace = true;
-   screenIsBlack = !screenIsBlack; 
-  }
-  
-}
-
-void keyReleased(){
-  
-  //when space bar is released, change holdSpace to false, allowing it to be pressed again
-  if(key == ' ' && holdSpace == true){
-    holdSpace = false;
+   for (Ball ball : balls) {
+      if(ball.hitDetection(xMove)){
+      player.hit();
+    }
+      
     
-  } 
-  
-  
+   }
+
+  ////////////////////////////Player///////////////////////////////////////
+  player.display(xMove);
+
+
+
+
+  if (holdA == true) { //moves player Left (see keyPressed)
+    xMove--;
+  }
+  if (holdD == true) { //moves player Right (see keyPressed)
+    xMove++;
+  }
+}
+
+
+
+void keyPressed() {
+
+  //when the space bar is pressed and you are not holding it, make screen the opposite colour of what it is
+  if (key == ' ' && holdSpace == false) {
+    holdSpace = true;
+    screenIsBlack = !screenIsBlack;
+  }
+
+  if (key == 'a') {  //moves player Left (see Player)
+    holdA = true;
+  }
+  if (key == 'd') { //moves player Right (see Player)
+    holdD = true;
+  }
+}
+
+void keyReleased() {
+
+  //when space bar is released, change holdSpace to false, allowing it to be pressed again
+  if (key == ' ' && holdSpace == true) {
+    holdSpace = false;
+  }
+
+  if (key == 'a') { //When player releases the button, they stop instantly
+    holdA = false;
+  }
+  if (key == 'd') { //When player releases the button, they stop instantly
+    holdD = false;
+  }
 }

@@ -3,20 +3,20 @@ class Ball {
   PVector acceleration; //will be added to gravity
   PVector ball; //controls the position of the ball
   float diameter = 34; //the diameter of the ball, will be used for hit detection
-  float x = random(0, 400); //the ball spawns at a random x
-  float y = -17; //ball will spawn offscreen
+  float x; //the ball spawns at a random x
+  float y; //ball will spawn offscreen
 
-boolean ballReachedBottom = false;
+  boolean ballReachedBottom = false;
 
-  Ball() {
-
+  Ball(float tempX, float tempY) {
+    x = tempX;
+    y = tempY;
     gravity = new PVector(0, 0); //will be added to balls y position
     acceleration = new PVector(0, 0.05);  //will be added to gravity
     ball = new PVector(x, y); //controls the position of the ball
   }
 
   void display() { //display the ball
-
     fill(0); //the color is very important so it hides the display depending on the background
     ellipse(ball.x, ball.y, diameter, diameter);
   }
@@ -29,7 +29,7 @@ boolean ballReachedBottom = false;
 
   void bounce() { //controls when the balls will bounce, and how bouncy they are
 
-    if (ball.y >= 335) { //when ball reaches the bottom bar
+    if (ball.y >= 318) { //when ball reaches the bottom bar
       gravity.y = -5; //change gravity so it increases
       acceleration.y = acceleration.y * -1; //temporarily reverse acceleration
       ballReachedBottom = true;
@@ -38,12 +38,21 @@ boolean ballReachedBottom = false;
   }
 
   boolean spawnNewBall() { //this controls when a new ball spawns
-    if (ball.y >= 334 && ballReachedBottom == false) { //it is 1 less than bounce because it needs to happen BEFORE bounce changes ballreachedBottom to true
+    if (ball.y >= 316 && ballReachedBottom == false) { //it is a few less than bounce because it needs to happen BEFORE bounce changes ballreachedBottom to true
       return true;
     } else {
       return false;
     }
-    
   }
-  
+
+  boolean hitDetection(float xMove) {
+    float distance = dist(xMove+22, 300, ball.x, ball.y);
+    text(xMove, 200, 200);
+    text(distance, 100, 100);
+    if (distance < 34/2+9) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
