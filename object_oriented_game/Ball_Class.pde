@@ -6,7 +6,9 @@ class Ball {
   float x; //the ball spawns at a random x
   float y; //ball will spawn offscreen
 
-  boolean ballReachedBottom = false;
+  boolean ballReachedBottom = false; //for detecting when to spawn a new ball
+  boolean ballHasHitPlayer = false;  //for detecting when to spawn a new ball
+  int onlySpawnFirstTime = 1; //this is so it only spawns a new ball ONCE per ball
 
   Ball(float tempX, float tempY) {
     x = tempX;
@@ -17,7 +19,7 @@ class Ball {
   }
 
   void display() { //display the ball
-    fill(0); //the color is very important so it hides the display depending on the background
+    fill(255); //the color is very important so it hides the display depending on the background
     ellipse(ball.x, ball.y, diameter, diameter);
   }
 
@@ -32,7 +34,8 @@ class Ball {
     if (ball.y >= 318) { //when ball reaches the bottom bar
       gravity.y = -5; //change gravity so it increases
       acceleration.y = acceleration.y * -1; //temporarily reverse acceleration
-      ballReachedBottom = true;
+      ballReachedBottom = true; //for spawning a new ball
+      onlySpawnFirstTime = 2; //so it only spawns the first time it happends
     }
     acceleration.y = 0.05; //reset acceleration so they begin to fall again
   }
@@ -45,11 +48,27 @@ class Ball {
     }
   }
 
-  boolean hitDetection(float xMove) {
-    float distance = dist(xMove+22, 300, ball.x, ball.y);
-    text(xMove, 200, 200);
-    text(distance, 100, 100);
+  boolean hitDetection(float xMove) { //hit detection for when ball is in contact with player head
+    float distance = dist(xMove+22, 300, ball.x, ball.y); //hit detection distance is slightly smaller because i found it felt more fair to the player
     if (distance < 34/2+9) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void ballHitPlayer() { //when the ball hits the player
+        ballHasHitPlayer = false;   //this is so it spawns a new ball
+    gravity.y = -5; //change gravity so it increases
+    acceleration.y = acceleration.y * -1; //temporarily reverse acceleration
+    acceleration.y = 0.05; //reset acceleration so they begin to fall a
+    if(onlySpawnFirstTime == 1){ //so it only spawns a new ball once
+        ballHasHitPlayer = true;
+    }
+        onlySpawnFirstTime = 2;
+  }
+   boolean spawnNewBallHit() { //this controls when a new ball spawns
+    if (ballHasHitPlayer == true) { //it is a few less than bounce because it needs to happen BEFORE bounce changes ballreachedBottom to true
       return true;
     } else {
       return false;
